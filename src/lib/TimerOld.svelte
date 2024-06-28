@@ -1,5 +1,4 @@
 <script lang="ts">
-    import store from "$lib/store"
     //timer
 
     type Milliseconds = number 
@@ -7,11 +6,13 @@
     let {
         startTime: startTime, 
         refreshRate = 9,
-        paused = false
+        paused = false,
+        title = "Stopwatch"
     }: {
         startTime: Milliseconds, 
         refreshRate?: Milliseconds
-        paused?: boolean
+        paused?: boolean,
+        title?: string
     } = $props() // annoying that you are forced to write every prop twice to type it in svelte 5.
 
     
@@ -20,14 +21,16 @@
 
 
 
-
     let currentTime = $state(Date.now());
-    let lastPausedTime = $state(null as null | Milliseconds)
+    let lastPausedTime = $state(currentTime as null | Milliseconds)
     let pausedTimeCount = $state(0)
 
     
     let elapsedTimeMillis = $derived(paused ? lastPausedTime! - startTime - pausedTimeCount : currentTime - startTime - pausedTimeCount)
 
+
+    //first time
+    
 
     $effect(() => {
         if (paused) {
@@ -89,6 +92,19 @@
         currentTime = Date.now();
     }
 
+    function deleteButtonPressed(){
+        const historyIsClear = false
+        if (!historyIsClear) {
+            const doClear = confirm("Would you like to clear the history of this stopwatch?")
+            if (doClear){
+
+                return
+            }
+        }
+        
+
+        const doDelete = confirm("Would you like to delete this stopwatch?")
+    }
 
 
 
@@ -114,12 +130,20 @@
     })
     
 
+
 </script>
 
-<div class="border-2 bg-neutral-400 dark:bg-[hsl(0,0%,12%)] border-black dark:border-gray-500 rounded-md px-3 py-3 max-w-fit">
+<div class="border-2 bg-neutral-400 dark:bg-[hsl(0,0%,12%)] border-black dark:border-gray-500 rounded-md px-3 py-3 max-w-fit relative">
     <h1 class="text-xl text-[1.5rem] text-center  decoration-1 font-semibold">
-        Stopwatch 1
+        <div contenteditable="true" bind:innerText={title}>{title} </div>
     </h1>
+    <button 
+        class="bg-red-600 border-2  text-white   border-black dark:border-neutral-300 rounded-sm  hover:brightness-125 py-0 px-1 font-mono rounded-sm text-sm absolute right-2 top-2"
+        onclick={deleteButtonPressed}
+    >
+        X
+    </button>
+    
     <div class="pt-3"></div>
     
     <p class = "time">
@@ -153,27 +177,38 @@
         <p class="text-base text-center">Previous Times:</p>
         <div class="pt-1.5"></div>
         <div class="flex flex-col gap-1.5">
-            {#each [1,2] as _}
-            <div class=" flex gap-1 items-stretch justify-normal  text-white">
-                <div class="flex justify-center items-stretch">
-                    <button class="bg-red-500  hover:bg-blue-700 text-white  py-0.5 px-0.5 font-mono rounded-sm text-sm" >
-                        X
-                    </button>
+            {#each [1,2, 3, 4] as _}
+                <div class=" flex gap-1 items-stretch justify-normal  text-white">
+                    <div class="flex justify-center items-stretch">
+                        <button class="bg-red-500  hover:bg-red-600 text-white  py-0.5 px-0.5 font-mono rounded-sm text-sm" >
+                            X
+                        </button>
+                    </div>
+                    <div class="text-base bg-zinc-600 p-0.5 rounded-sm text-center min-w-32 flex justify-center items-center">
+                        5:31:33
+                    </div>
+                    <div 
+                        class="flex gap-1 ml-auto text-xs items-center bg-zinc-700 rounded-sm px-1.5 py-0.5"
+                    >
+                        <p class="opacity-75">10/31/24</p>
+                        <p class="opacity-65">|</p>
+                        <p class="opacity-55">16:42</p>
+                    </div>
                 </div>
-                <div class="text-base bg-zinc-600 p-0.5 rounded-sm text-center min-w-32 flex justify-center items-center">
-                    5:31:33
-                </div>
-                <div 
-                    class="flex gap-1 ml-auto text-xs items-center bg-zinc-700 rounded-sm px-1.5 py-0.5"
-                >
-                    <p class="opacity-75">10/31/24</p>
-                    <p class="opacity-65">|</p>
-                    <p class="opacity-55">16:42</p>
-                </div>
-    
-                
-            </div>
             {/each}
+            
+            <div class=" flex gap-1 items-stretch justify-normal  text-white">
+                <button class="text-base bg-zinc-700 opacity-90 hover:brightness-150  p-0.5 rounded-sm text-center w-full flex justify-center items-center">
+                    <!-- ... -->
+                    v
+                </button>  
+                
+                <!-- <div class="flex justify-center items-stretch">
+                    <button class="bg-red-500  hover:bg-blue-700 text-white  py-0.5 px-0.5 font-mono rounded-sm text-sm" >
+                        CL!
+                    </button>
+                </div> -->
+            </div>
         </div>
 
         <div class="pt-3"></div>
@@ -182,9 +217,9 @@
                 Statistics
             </summary>
             <div>
-                {#each [["Total Time", "11:03:06"], ["Average Time", "5:31:33"]] as [title, time]}
-                    <div class="flex gap-1 justify-between items-center  text-white text-base">
-                        <p>{title}:</p> 
+                {#each [["Total Time", "11:03:06"], ["Average Time", "5:31:33"]] as [stat, time]}
+                    <div class="flex gap-1 justify-between items-center text-base">
+                        <p>{stat}:</p> 
                         <p class="">{time}</p>
                     </div>
                 {/each}

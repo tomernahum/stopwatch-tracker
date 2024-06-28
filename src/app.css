@@ -10,6 +10,24 @@
     
 }
 
+
+@media (max-width: 640px) {
+    :root {
+        font-size: 1.25rem;
+    }
+    /* main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    } */
+}
+@media (max-width: 350px) {
+    :root {
+        font-size: 1.00rem;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
