@@ -3,6 +3,7 @@ import { createStore } from 'tinybase/with-schemas';
 import { createLocalPersister } from 'tinybase/persisters/persister-browser';
 
 // Create TinyBase Store
+
 const store = createStore().setTablesSchema({
     stopwatches: {
         title: {type: 'string'},

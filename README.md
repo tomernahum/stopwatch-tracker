@@ -1,38 +1,17 @@
-# create-svelte
+# Multi Persistant History Stopwatches
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+- i made this so i can manually track how much screen time i do lol
+- you could use it to track your commute time
 
-## Creating a project
+Instead of laps, the timer saves a history every time you reset it (you can delete an entry if you make one by accident)
 
-If you're seeing this, you've probably already done this step. Congrats!
+it then shows statistics such as average time and total time of your past timers, and when they were added. may add more detailed statistic views such as weekly trend. 
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+perfect for measuring how long an event or activity lasts!
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+syncs easily, and doesn't get lost or inaccurate if you close and reopen the page! (stopwatch is calculated using differences between times since the epoch of now and when you started the timer)
 
-## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## NOT DONE YET:
+Timer history
+Syncing
