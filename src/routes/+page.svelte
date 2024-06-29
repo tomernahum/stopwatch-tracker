@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Timer from "$lib/TimerOld.svelte";
-	import TimerPersisted from "$lib/StopwatchPersisted.svelte";
+	import TimerPersisted from "$lib/Stopwatch.svelte";
 	import createStopwatch from "$lib/createStopwatch";
 	import store from "$lib/tinybase";
 
@@ -27,11 +26,13 @@
     <div class="flex flex-wrap justify-center gap-10">
 
         {#each stopwatchIds as id (id)}
-            <TimerPersisted id={id} />
+            <TimerPersisted stopwatchId={id} />
         {/each}
 
+        <!-- Create Stopwatch Button -->
         <button
             onclick={newStopwatch}
+            class="min-w-64 min-h-96 border-2 rounded-md"
         >
             +
         </button>
