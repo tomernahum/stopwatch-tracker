@@ -22,8 +22,10 @@
     
 </script>
 
-<main class="px-3 py-3">
-    <div class="flex flex-wrap justify-center gap-10">
+<main class="px-0 py-3">
+    <!-- TODO: learn css-grid -->
+    <!-- undecided about whether to keep md:justify-start -->
+    <div class="flex flex-wrap justify-center md:justify-start items-center gap-10 w-fit mx-auto">
 
         {#each stopwatchIds as id (id)}
             <TimerPersisted stopwatchId={id} />
@@ -32,7 +34,7 @@
         <!-- Create Stopwatch Button -->
         <button
             onclick={newStopwatch}
-            class="min-w-64 min-h-96 border-2 rounded-md"
+            class="min-w-64 min-h-80 border-2 rounded-md"
         >
             +
         </button>

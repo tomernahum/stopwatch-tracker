@@ -10,6 +10,7 @@
     
 }
 
+/* TODO: make more elegant solution / test on real mobile */
 
 @media (max-width: 500px) {
     :root {
@@ -22,7 +23,7 @@
         align-items: center;
     } */
 }
-@media (max-width: 350px) {
+@media (max-width: 425px) {
     :root {
         font-size: 1.00rem;
     }

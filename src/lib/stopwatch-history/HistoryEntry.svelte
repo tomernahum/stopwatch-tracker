@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { msToDisplayString, msToUnits, unitsToDisplayString } from "./stopwatch";
-	import store from "./tinybase";
+	import { msToDisplayString, msToUnits, unitsToDisplayString } from "../stopwatch";
+	import ConfirmXButton from "./XButtonWithConfirm.svelte";
+	import store from "../tinybase";
 
     let {
         stopwatchHistoryRowId
@@ -29,7 +30,7 @@
     const elapsedTimeCountDisplay = $derived(unitsToDisplayString(elapsedTimeCount))
 
     function deleteEntry() {
-
+        store.delRow('stopwatchHistory', stopwatchHistoryRowId)
     }
     
 
@@ -37,20 +38,16 @@
 
 <div class=" flex gap-1 items-stretch justify-normal  text-white">
     <div class="flex justify-center items-stretch">
-        <button 
-            class="bg-red-500  hover:bg-red-600 text-white  py-0.5 px-0.5 font-mono rounded-sm text-sm" 
-            onclick={deleteEntry}
-        >
-            X
-        </button>
-        <!-- TODO: confirm by turning into 2 buttons to confirm and cancel -->
+        <ConfirmXButton onClick={deleteEntry} />
     </div>
-    <div class="text-base bg-zinc-600 p-0.5 rounded-sm text-center min-w-32 flex justify-center items-center">
+    <div 
+        class="text-base bg-zinc-600 p-0.5 rounded-sm text-center flex justify-center items-center grow"
+    >
         {#if (elapsedTimeCount.days > 0)}{elapsedTimeCountDisplay.days}:{/if}{elapsedTimeCountDisplay.hours}:{elapsedTimeCountDisplay.minutes}:{elapsedTimeCountDisplay.seconds}
         <!-- <span class="text-base">. </span><span class="text-xs">{elapsedTimeCountDisplay.milliseconds}</span> -->
     </div>
     <div 
-        class="flex gap-1 ml-auto text-xs items-center bg-zinc-700 rounded-sm px-1.5 py-0.5"
+        class="flex gap-1 ml-auto text-xs items-center bg-zinc-700 rounded-sm px-1.5 py-0.5 w-fit "
     >
         <!-- Date -->
         <p class="opacity-75">
@@ -61,7 +58,7 @@
         
         <!-- Time -->
         <p class="opacity-55">
-            16:42
+            {new Date(entryData.endTime!).toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit'})}
         </p>
     </div>
 </div>

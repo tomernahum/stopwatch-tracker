@@ -1,6 +1,7 @@
 <script lang="ts">
-	import StopwatchHistoryEntry from "./StopwatchHistoryEntry.svelte";
-import { indexes } from "./tinybase";
+	import StopwatchHistoryEntry from "./HistoryEntry.svelte";
+import { indexes } from "../tinybase";
+	import HistoryStatistics from "./HistoryStatistics.svelte";
 
     let {
         stopwatchId
@@ -11,7 +12,7 @@ import { indexes } from "./tinybase";
     } = $props()
 
 
-
+    // TODO: max number of entries / pagination
     let stopwatchHistoryRowIds = $state(indexes.getSliceRowIds('byStopwatchId', stopwatchId))
     $effect(()=>{
         const listenerId =  indexes.addSliceRowIdsListener('byStopwatchId', stopwatchId, () => {
@@ -32,7 +33,7 @@ import { indexes } from "./tinybase";
     <p class="text-base text-center">Previous Times:</p>
     <div class="pt-1.5"></div>
     <div class="flex flex-col gap-1.5">
-        {#each stopwatchHistoryRowIds as id}
+        {#each stopwatchHistoryRowIds.toReversed() as id (id)}
             <StopwatchHistoryEntry stopwatchHistoryRowId={id} />
         {/each}
         
@@ -51,18 +52,6 @@ import { indexes } from "./tinybase";
     </div>
 
     <div class="pt-3"></div>
-    <details open>
-        <summary>
-            Statistics
-        </summary>
-        <div>
-            {#each [["Total Time", "11:03:06"], ["Average Time", "5:31:33"]] as [stat, time]}
-                <div class="flex gap-1 justify-between items-center text-base">
-                    <p>{stat}:</p> 
-                    <p class="">{time}</p>
-                </div>
-            {/each}
-        </div>
-    </details>
+    <HistoryStatistics stopwatchHistoryRowIds={stopwatchHistoryRowIds}/>
     
 </div>

@@ -3,7 +3,7 @@
 	import { browser, building, dev } from "$app/environment";
     import store from "$lib/tinybase"
 	import { onMount } from "svelte";
-	import StopwatchHistoryDisplay from "./StopwatchHistoryDisplay.svelte";
+	import StopwatchHistoryDisplay from "./stopwatch-history/StopwatchHistoryDisplay.svelte";
 	import { msToUnits, unitsToDisplayString } from "./stopwatch";
 
     type Milliseconds = number 
@@ -208,7 +208,7 @@
 
 </script>
 
-<div class="border-2 bg-neutral-400 dark:bg-[hsl(0,0%,12%)] border-black dark:border-gray-500 rounded-md px-3 py-3 max-w-fit relative">
+<div class="border-2 bg-neutral-400 dark:bg-[hsl(0,0%,12%)] border-black dark:border-gray-500 rounded-md px-3 py-3 max-w-fit h-fit relative">
     <h1 class="text-xl text-[1.unitsToDisplayStringnter  decoration-1 font-semibold">
         <div contenteditable="true" bind:innerText={title}>{title} </div>
     </h1>
