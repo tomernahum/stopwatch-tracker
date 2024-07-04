@@ -4,7 +4,7 @@
     import store from "$lib/tinybase"
 	import { onMount } from "svelte";
 	import StopwatchHistoryDisplay from "./stopwatch-history/StopwatchHistoryDisplay.svelte";
-	import { msToUnits, unitsToDisplayString } from "./stopwatch";
+	import { msToUnits, unitsToDisplayStrings } from "./stopwatch";
 
     type Milliseconds = number 
 
@@ -202,14 +202,14 @@
 
 
     let elapsedTimeUnits = $derived(msToUnits(elapsedTimeMillis))
-    let timeDisplay = $derived(unitsToDisplayString(elapsedTimeUnits))
+    let timeDisplay = $derived(unitsToDisplayStrings(elapsedTimeUnits))
     
 
 
 </script>
 
 <div class="border-2 bg-neutral-400 dark:bg-[hsl(0,0%,12%)] border-black dark:border-gray-500 rounded-md px-3 py-3 max-w-fit h-fit relative">
-    <h1 class="text-xl text-[1.unitsToDisplayStringnter  decoration-1 font-semibold">
+    <h1 class="text-xl text-[1.unitsToDisplayStringnter  decoration-1 font-semibold text-center">
         <div contenteditable="true" bind:innerText={title}>{title} </div>
     </h1>
     <button 
@@ -261,8 +261,11 @@
         margin:auto; 
         /* background: #64748b; */
 
-        @apply border-2 border-black dark:border-neutral-300 rounded-md text-5xl px-4 py-1 pb-1.5;
-        @apply bg-stone-300 dark:bg-stone-600
+        @apply border-2 border-black dark:border-neutral-300 rounded-md text-5xl px-4 py-1 ;
+        /* pb-1.5 */
+        @apply bg-stone-300 dark:bg-stone-600;
+        font-family: Arial, Helvetica, sans-serif;
+        @apply w-64 text-center;
     }
     .control-button {
         /* border: 2px solid black; */

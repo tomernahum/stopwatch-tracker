@@ -8,7 +8,7 @@ export function msToUnits(ms: number) {
     }
 }
 
-export function unitsToDisplayString(elapsedTimeUnits: ReturnType<typeof msToUnits>) {
+export function unitsToDisplayStrings(elapsedTimeUnits: ReturnType<typeof msToUnits>) {
     return {
         milliseconds: elapsedTimeUnits.milliseconds.toString().padStart(3, '0'),
         seconds: elapsedTimeUnits.seconds.toString().padStart(2, '0'),
@@ -18,9 +18,10 @@ export function unitsToDisplayString(elapsedTimeUnits: ReturnType<typeof msToUni
     }
 }
 
-export function msToDisplayString(ms: number) {
-    return unitsToDisplayString(msToUnits(ms))
+export function msToDisplayStrings(ms: number) {
+    return unitsToDisplayStrings(msToUnits(ms))
 }
+
 
 
 export function msToDate(ms: number) {

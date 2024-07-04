@@ -13,11 +13,11 @@ import { indexes } from "../tinybase";
 
 
     // TODO: max number of entries / pagination
-    let stopwatchHistoryRowIds = $state(indexes.getSliceRowIds('byStopwatchId', stopwatchId))
+    let stopwatchHistoryRowIds = $state(indexes.getSliceRowIds('byStopwatchId', stopwatchId).toReversed())
     $effect(()=>{
         const listenerId =  indexes.addSliceRowIdsListener('byStopwatchId', stopwatchId, () => {
             // console.log("NEW ROW on:", stopwatchId, indexes.getSliceRowIds('byStopwatchId', stopwatchId))
-            stopwatchHistoryRowIds = indexes.getSliceRowIds('byStopwatchId', stopwatchId)
+            stopwatchHistoryRowIds = indexes.getSliceRowIds('byStopwatchId', stopwatchId).toReversed()
         });
         return () => {
             indexes.delListener(listenerId)
@@ -33,22 +33,12 @@ import { indexes } from "../tinybase";
     <p class="text-base text-center">Previous Times:</p>
     <div class="pt-1.5"></div>
     <div class="flex flex-col gap-1.5">
-        {#each stopwatchHistoryRowIds.toReversed() as id (id)}
-            <StopwatchHistoryEntry stopwatchHistoryRowId={id} />
+        {#each stopwatchHistoryRowIds as id (id)}
+            <div>
+                <!-- weird bug appears only in build mode (not dev mode) if i remove the div - todo: investigate -->
+                <StopwatchHistoryEntry stopwatchHistoryRowId={id} />
+            </div>
         {/each}
-        
-        <div class=" flex gap-1 items-stretch justify-normal  text-white">
-            <button class="text-base bg-zinc-700 opacity-90 hover:brightness-150  p-0.5 rounded-sm text-center w-full flex justify-center items-center">
-                <!-- ... -->
-                v
-            </button>  
-            
-            <!-- <div class="flex justify-center items-stretch">
-                <button class="bg-red-500  hover:bg-blue-700 text-white  py-0.5 px-0.5 font-mono rounded-sm text-sm" >
-                    CL!
-                </button>
-            </div> -->
-        </div>
     </div>
 
     <div class="pt-3"></div>

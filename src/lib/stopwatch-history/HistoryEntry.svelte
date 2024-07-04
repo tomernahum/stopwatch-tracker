@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { msToDisplayString, msToUnits, unitsToDisplayString } from "../stopwatch";
+	import { msToDisplayStrings, msToUnits, unitsToDisplayStrings } from "../stopwatch";
 	import ConfirmXButton from "./XButtonWithConfirm.svelte";
 	import store from "../tinybase";
 
@@ -27,7 +27,7 @@
     })
 
     const elapsedTimeCount = $derived(msToUnits(entryData.elapsedTimeCount!))
-    const elapsedTimeCountDisplay = $derived(unitsToDisplayString(elapsedTimeCount))
+    const elapsedTimeCountDisplay = $derived(unitsToDisplayStrings(elapsedTimeCount))
 
     function deleteEntry() {
         store.delRow('stopwatchHistory', stopwatchHistoryRowId)
@@ -36,7 +36,7 @@
 
 </script>
 
-<div class=" flex gap-1 items-stretch justify-normal  text-white">
+<div class="flex gap-1 items-stretch justify-normal  text-white">
     <div class="flex justify-center items-stretch">
         <ConfirmXButton onClick={deleteEntry} />
     </div>
