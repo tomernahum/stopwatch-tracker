@@ -2,6 +2,7 @@
 	import { msToDisplayStrings, msToUnits, unitsToDisplayStrings } from "../stopwatch";
 	import ConfirmXButton from "./XButtonWithConfirm.svelte";
 	import store from "../tinybase";
+	import ColorPicker from "./ColorPicker.svelte";
 
     let {
         stopwatchHistoryRowId
@@ -37,9 +38,24 @@
 </script>
 
 <div class="flex gap-1 items-stretch justify-normal  text-white">
+    
     <div class="flex justify-center items-stretch">
         <ConfirmXButton onClick={deleteEntry} />
     </div>
+    <ColorPicker options={[
+        ["defualt", "bg-white"],
+        ["green", "bg-green-500"],
+        ["blue", "bg-blue-500"],
+        ["sky", "bg-sky-500"],
+        ["purple", "bg-purple-500"],
+        ["pink", "bg-pink-500"],
+        ["red", "bg-red-500"],
+        ["orange", "bg-orange-500"],
+        ["yellow", "bg-yellow-500"],
+
+    ]} defaultOption={entryData.group} onSelected={(selected) => {
+        store.setCell('stopwatchHistory', stopwatchHistoryRowId, 'group', selected)
+    }} />
     <div 
         class="text-base bg-zinc-600 p-0.5 rounded-sm text-center flex justify-center items-center grow"
     >

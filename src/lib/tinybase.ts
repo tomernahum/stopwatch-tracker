@@ -4,7 +4,7 @@ import { createLocalPersister } from 'tinybase/persisters/persister-browser';
 
 // Create TinyBase Store
 
-function createTinyBaseStore() {
+export function createTinyBaseStore() {
     const store = createStore().setTablesSchema({
         stopwatches: {
             title: {type: 'string'},
@@ -21,6 +21,8 @@ function createTinyBaseStore() {
             startTime: {type: 'number'},
             endTime: {type: 'number'},
             pausedTimeCount: {type: 'number'},
+
+            group: {type: 'string', default: 'default'},
         }
     
     });

@@ -72,13 +72,15 @@
         {#each statsToDisplay as [stat, time]}
             <div class="flex gap-1 justify-between items-center text-base">
                 <p>{stat}:</p> 
-                <p class="">
+                <p class="flex justify-center items-center">
                     {#if time}
+                        <span>
                         {getDisplayString(time)[0]}<span class="text-[.5rem]">.{getDisplayString(time)[1]}</span>
                         <!-- TODO: maybe extract this and other places used into a component (pass in tailwind for ms) -->
                         <!-- TODO: make prettier, maybe make seconds smaller-->
+                        </span>
                     {:else}
-                        N/A
+                        <span class="text-sm h-fit">N/A</span>
                     {/if}
                 </p>
             </div>
