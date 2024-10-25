@@ -1,4 +1,24 @@
 
+
+- upgrade svelte vite plugin / everything
+
+
+- multiple pages
+- drag and drop
+- consider making it look better
+- test on safari, linux, mobile, etc
+
+- analytics
+- feedback button
+
+
+
+
+
+
+
+
+OUTDATED:
 - make it build (probably just disabling ssr) + deploy
 
 VV - make timer history & statistics work

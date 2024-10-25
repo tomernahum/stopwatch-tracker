@@ -1,11 +1,12 @@
 import { browser, dev } from '$app/environment';
-import { createIndexes, createStore } from 'tinybase/with-schemas';
+import { createMergeableStore, createIndexes } from 'tinybase';
+// import { createIndexes, createStore } from 'tinybase/with-schemas'; 
 import { createLocalPersister } from 'tinybase/persisters/persister-browser';
 
 // Create TinyBase Store
 
 export function createTinyBaseStore() {
-    const store = createStore().setTablesSchema({
+    const store = createMergeableStore().setTablesSchema({
         stopwatches: {
             title: {type: 'string'},
             startTime: {type: 'number'},
@@ -52,7 +53,7 @@ export function createTinyBaseStore() {
         },
     
         stopwatchHistory: {},
-    }
+    }  // BUG broken (see type error later on)
     
     // register listeners for debugging
     store.addValuesListener(() => console.log('valuesJson', store.getValues()));

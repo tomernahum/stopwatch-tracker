@@ -28,14 +28,17 @@
     let lastPausedTime = $state(store.getCell('stopwatches', stopwatchId, "lastPausedTime")!)
     let pausedTimeCount = $state(store.getCell('stopwatches', stopwatchId, "pausedTimeCount")!)
     
-    if (
-        startTime === undefined || paused === undefined || title === undefined || lastPausedTime === undefined || pausedTimeCount === undefined
-    ) {
+    
+    $effect(() => {
+        if (
+            startTime === undefined || paused === undefined || title === undefined || lastPausedTime === undefined || pausedTimeCount === undefined
+        ) {
         console.warn({
             startTime, paused, title, lastPausedTime, pausedTimeCount
         })
-        throw new Error('something was undefined in timer data')
-    }
+            throw new Error('something was undefined in timer data')
+        }
+    })
     
 
     $effect(() => {
