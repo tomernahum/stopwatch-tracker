@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run server.ts",
-    "start": "esrun run server.ts"
+    "start": "esrun server.ts"
   },
   "keywords": [],
   "author": "",
