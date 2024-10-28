@@ -3,6 +3,8 @@
 - determined order (esp important since its different on diff clients with syncing)
     - + drag and drop
 - + multiple pages
+- d_d0s protection / r8 l1miting
+
 
 - consider making it look better
 - test on safari, linux, mobile, etc
@@ -10,6 +12,7 @@
 - analytics
 - feedback button
 
+might rewrite it not in tinybase
 
 
 

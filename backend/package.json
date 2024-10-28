@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run server.ts",
-    "start": "bun run server.ts"
+    "start": "esrun run server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "esrun": "^3.2.26",
     "tinybase": "^5.3.5",
     "ws": "^8.18.0"
   }

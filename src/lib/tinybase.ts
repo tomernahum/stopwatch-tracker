@@ -76,7 +76,8 @@ function createTinyBaseStore(
 
     // synchronization!!
 
-    const SYNC_BASE_URL = 'ws://localhost:8050' as const;
+    // const SYNC_BASE_URL = 'ws://localhost:8050' as const;
+    const SYNC_BASE_URL = "wss://stopwatch-tracker-tinybase-backend.coolify.ttools.io" as const;
     // const x = import.meta.env.Mode == "development" ? 'ws://localhost:8050' : "prod_url_here"
 
     if (sync) {
