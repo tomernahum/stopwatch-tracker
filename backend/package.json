@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run server.ts",
+    "dev": "bun run --watch server.ts",
     "start": "esrun server.ts"
   },
   "keywords": [],
@@ -15,5 +15,8 @@
     "esrun": "^3.2.26",
     "tinybase": "^5.3.5",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.1"
   }
 }

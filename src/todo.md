@@ -3,7 +3,8 @@
 - determined order (esp important since its different on diff clients with syncing)
     - + drag and drop
 - + multiple pages
-- d_d0s protection / r8 l1miting
+- d_d0s protection / r8 l1miting  + logging on the backend
+- share button
 
 
 - consider making it look better

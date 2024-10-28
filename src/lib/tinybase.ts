@@ -74,11 +74,11 @@ function createTinyBaseStore(
         persister.startAutoSave();
     })
 
-    // synchronization!!
+
 
     // const SYNC_BASE_URL = 'ws://localhost:8050' as const;
-    const SYNC_BASE_URL = "wss://stopwatch-tracker-tinybase-backend.coolify.ttools.io" as const;
-    // const x = import.meta.env.Mode == "development" ? 'ws://localhost:8050' : "prod_url_here"
+    // const SYNC_BASE_URL = "wss://stopwatch-tracker-tinybase-backend.coolify.ttools.io" as const;
+    const SYNC_BASE_URL = import.meta.env.DEV ? 'ws://localhost:8050' : "wss://stopwatch-tracker-tinybase-backend.coolify.ttools.io"
 
     if (sync) {
         createWsSynchronizer(
