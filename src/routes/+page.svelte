@@ -5,7 +5,7 @@
 
     //TODO: maintain a specific order of stopwatches
     let stopwatchIds = $state(store.getRowIds('stopwatches'))
-
+    
     $effect(() => {
         const listener = store.addRowIdsListener('stopwatches', (store, tableId) => {
             stopwatchIds = store.getRowIds(tableId)

@@ -1,10 +1,9 @@
 
 
-- upgrade svelte vite plugin / everything
+- determined order (esp important since its different on diff clients with syncing)
+    - + drag and drop
+- + multiple pages
 
-
-- multiple pages
-- drag and drop
 - consider making it look better
 - test on safari, linux, mobile, etc
 
