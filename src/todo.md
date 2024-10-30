@@ -1,5 +1,8 @@
 
 
+finish / test if works  the share button and merging thing
+
+
 - determined order (esp important since its different on diff clients with syncing)
     - + drag and drop
 - + multiple pages

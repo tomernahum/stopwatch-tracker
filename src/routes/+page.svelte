@@ -1,5 +1,6 @@
 <script lang="ts">
-	import TimerPersisted from "$lib/Stopwatch.svelte";
+	import ShareRoomButton from "$lib/ShareRoomButton.svelte";
+import TimerPersisted from "$lib/Stopwatch.svelte";
 	import createStopwatch from "$lib/createStopwatch";
 	import store from "$lib/tinybase";
 
@@ -25,6 +26,11 @@
 <main class="px-0 py-3">
     <!-- TODO: learn css-grid -->
     <!-- undecided about whether to keep md:justify-start -->
+
+<!-- <div class="absolute top-2 right-2 z-1000">
+    <ShareRoomButton />
+</div> -->
+
     <div class="flex flex-wrap justify-center md:justify-start items-center gap-10 w-fit mx-auto">
 
         {#each stopwatchIds as id (id)}

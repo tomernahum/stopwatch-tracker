@@ -11,6 +11,7 @@ function createTinyBaseStore(
     {sync?: boolean, roomId?: string}
 ) {
 
+
     const store = createMergeableStore().setTablesSchema({
         stopwatches: {
             title: {type: 'string'},
@@ -104,11 +105,22 @@ function createTinyBaseStore(
 
 
 const roomId = new URLSearchParams(window.location.search).get('room');
+const newMerge = new URLSearchParams(window.location.search).get('newMerge') === 'true';
 
 
 const {store, indexes, persister} = roomId ? createTinyBaseStore({sync: true, roomId}) : createTinyBaseStore({sync: false, roomId:'local'})
 // todo add a share button
 
+if (newMerge) {
+    const {store: localStore} = createTinyBaseStore({sync: false, roomId:'local'})
+    store.merge(localStore)
+
+    // delete the newMerge query param
+    
+    const url = new URL(window.location.href);
+    url.searchParams.delete('newMerge');
+    window.history.replaceState({}, '', url.toString());
+}
 
 
 
