@@ -5,6 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource-variable/inter':
+    specifier: ^5.1.0
+    version: 5.1.0
+  '@fontsource/ibm-plex-mono':
+    specifier: ^5.1.0
+    version: 5.1.0
+  '@fontsource/inter':
+    specifier: ^5.1.0
+    version: 5.1.0
+  '@fontsource/noto-mono':
+    specifier: ^5.1.0
+    version: 5.1.0
   react:
     specifier: ^18.3.1
     version: 18.3.1
@@ -516,6 +528,22 @@ packages:
     dependencies:
       levn: 0.4.1
     dev: true
+
+  /@fontsource-variable/inter@5.1.0:
+    resolution: {integrity: sha512-Wj2dUGP0vUpxRGQTXQTCNJO+aLcFcQm+gUPXfj/aS877bQkEPBPv9JvZJpwdm2vzelt8NTZ+ausKlBCJjh2XIg==}
+    dev: false
+
+  /@fontsource/ibm-plex-mono@5.1.0:
+    resolution: {integrity: sha512-XKsZNyRCj6tz8zlatHmniSoLVephMD5GQG2sXgcaEb8DkUO+O61r28uTlIMEZuoZXtP4c4STvL+KUlJM5jZOEg==}
+    dev: false
+
+  /@fontsource/inter@5.1.0:
+    resolution: {integrity: sha512-zKZR3kf1G0noIes1frLfOHP5EXVVm0M7sV/l9f/AaYf+M/DId35FO4LkigWjqWYjTJZGgplhdv4cB+ssvCqr5A==}
+    dev: false
+
+  /@fontsource/noto-mono@5.1.0:
+    resolution: {integrity: sha512-oobAnMOVSTOLZB0v3yy48ucink9HKsY9Ll1kChX8uNWeCodf21PcAc/VEB2mBsX7+5HWFqVV7+ec+mPbomDwBw==}
+    dev: false
 
   /@humanfs/core@0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
