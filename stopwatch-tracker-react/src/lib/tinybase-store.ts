@@ -36,7 +36,7 @@ function createTinyBaseStore(
 
     const store = createMergeableStore().setTablesSchema(tablesSchema)
     
-    // TODO can define relationships explicitly
+    // todo can define relationships explicitly
     
     const indexes = createIndexes(store);
     indexes.setIndexDefinition(
@@ -118,6 +118,8 @@ const newMerge = new URLSearchParams(window.location.search).get('newMerge') ===
 const {store, indexes, persister, UiReactWithSchemas} = roomId ? createTinyBaseStore({sync: true, roomId}) : createTinyBaseStore({sync: false, roomId:'local'})
 // todo add a share button
 
+
+// BETA Untested, for merging in local into synced data
 if (newMerge) {
     const {store: localStore} = createTinyBaseStore({sync: false, roomId:'local'})
     store.merge(localStore)
