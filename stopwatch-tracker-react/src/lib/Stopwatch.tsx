@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { store, UiReactWithSchemas } from "./tinybase-store";
 import { assumeDefined, msToUnits, unitsToDisplayStrings } from "./utils";
 import StopwatchHistoryDisplay from "./StopwatchHistoryDisplay";
+import ErrorBoundary from "./ErrorBoundary";
 const { useCell } = UiReactWithSchemas;
 
 
@@ -59,7 +60,9 @@ export function Stopwatch(props: { stopwatchId: string }) {
 
             <div className="pt-3"></div>
 
-            <StopwatchHistoryDisplay stopwatchId={props.stopwatchId} />
+            <ErrorBoundary>
+                <StopwatchHistoryDisplay stopwatchId={props.stopwatchId} />
+            </ErrorBoundary>
         </div>
     );
 }

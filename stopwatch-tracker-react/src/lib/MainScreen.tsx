@@ -1,4 +1,5 @@
 
+import ErrorBoundary from './ErrorBoundary'
 import { Stopwatch } from './Stopwatch'
 import { store, UiReactWithSchemas } from './tinybase-store'
 const { useRowIds } = UiReactWithSchemas
@@ -27,10 +28,15 @@ export default function MainScreen() {
     }
 
     return (
+        <>
         <div className="flex flex-wrap justify-center md:justify-start items-center gap-10 w-fit mx-auto">
 
             {stopwatchRowIds.map((stopwatchId) => (
-                <Stopwatch key={stopwatchId} stopwatchId={stopwatchId} />
+                <div key={stopwatchId}>
+                    <ErrorBoundary>
+                        <Stopwatch stopwatchId={stopwatchId} />
+                    </ErrorBoundary>
+                </div>
             ))}
             {/* <Stopwatch stopwatchId={"deliberately not found "} /> */}
 
@@ -42,6 +48,8 @@ export default function MainScreen() {
                 +
             </button>
         </div>
+        <p className="mt-60"></p>
+        </>
     )
 }
 
