@@ -11,70 +11,73 @@ type HistoryRow =  ReturnType<typeof useRow<'stopwatchHistory'>>
 
 export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) {
     const rowIds = useSliceRowIds('byStopwatchId', props.stopwatchId).toReversed();
-	const rows = rowIds.map((stopwatchHistoryRowId) => {
-        return assumeDefined(store.getRow('stopwatchHistory', stopwatchHistoryRowId))
-    })
-	const rowsMap = rowIds.reduce((acc, rowId) => {
-		acc[rowId] = assumeDefined(store.getRow('stopwatchHistory', rowId))
-		return acc
-	}, {} as {[rowId: string]: HistoryRow})
+    const rows = rowIds.map(id => assumeDefined(store.getRow('stopwatchHistory', id)));
+    const rowsMap = Object.fromEntries(rowIds.map(id => [id, assumeDefined(store.getRow('stopwatchHistory', id))]));
 
     const startOfDay = (date: number) => new Date(date).setHours(0, 0, 0, 0);
-    const days = Array.from(new Set(rows.map((row) => startOfDay(row.endTime)))).sort((a, b) => b - a);
+    const days = Array.from(new Set([...rows.map(row => startOfDay(row.endTime)), startOfDay(Date.now())])).sort((a, b) => b - a);
 
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(() => {
+        const todayIndex = days.findIndex(day => day === startOfDay(Date.now()));
+        return todayIndex !== -1 ? todayIndex : 0;
+    });
 
-    const paginatedRowIds = currentPage == -1 ? rowIds : days[currentPage]
-        ? rowIds
-            .filter((rowId) => startOfDay(rowsMap[rowId]?.endTime!) === days[currentPage]) // might be bad / break
-        : [];
+    const getPaginatedRowIds = () => {
+        if (currentPage === -1) return rowIds;
+        return days[currentPage]
+            ? rowIds.filter(id => startOfDay(rowsMap[id]?.endTime!) === days[currentPage])
+            : [];
+    };
 
-	const paginatedRows = paginatedRowIds.map((rowId) => rowsMap[rowId]);
+    const paginatedRowIds = getPaginatedRowIds();
+    const paginatedRows = paginatedRowIds.map(id => rowsMap[id]);
 
     const totalPages = days.length;
-
     const showPagination = totalPages > 1;
+
+    const handlePrevPage = () => setCurrentPage(prev => Math.max(prev - 1, -1));
+    const handleNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1));
+
+    const renderPaginationControls = () => (
+        <div className="flex items-center justify-between">
+            <button
+                onClick={handlePrevPage}
+                disabled={currentPage === -1}
+                className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
+            >
+                {'<'}
+            </button>
+            <p className="text-center text-base">
+                {currentPage !== -1 ? (
+                    new Date().toDateString() === new Date(days[currentPage]).toDateString()
+                        ? 'Today'
+                        : new Date(days[currentPage]).toLocaleDateString()
+                ) : "All time"}
+            </p>
+            <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages - 1}
+                className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
+            >
+                {'>'}
+            </button>
+        </div>
+    );
 
     return (
         <div className="relative">
-            {showPagination ? (
-                <div className="flex items-center justify-between">
-                    <button
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, -1))}
-                        disabled={currentPage === -1}
-                        className="text-sm px-2 py-1 bg-[#7a7276]  rounded disabled:opacity-50"
-                    >
-                        {'<'}
-                    </button>
-                    <p className="text-center text-base">
-						{currentPage !== -1 ? (
-							new Date().toDateString() === new Date(days[currentPage]).toDateString() ? 'Today' : new Date(days[currentPage]).toLocaleDateString()
-						) : "All time"}
-					</p>
-                    <button
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))}
-                        disabled={currentPage === totalPages - 1}
-                        className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
-                    >
-                        {">"}
-                    </button>
-                </div>
-			): (
-				<p className="text-center text-base">Previous Times:</p>
-			)}
-
+            {showPagination ? renderPaginationControls() : (
+                <p className="text-center text-base">Previous Times:</p>
+            )}
             <div className="pt-1.5"></div>
-
-            <div className="flex flex-col gap-1.5">
-                {paginatedRowIds.map((stopwatchHistoryRowId) => (
-					
+            <div className={`flex flex-col gap-1.5 ${currentPage === -1 ? 'overflow-y-auto max-h-72' : ''}`}>
+                {paginatedRowIds.map(id => (
                     <StopwatchHistoryEntry
-                        key={stopwatchHistoryRowId}
-                        stopwatchHistoryRowId={stopwatchHistoryRowId}
+                        key={id}
+                        stopwatchHistoryRowId={id}
                     />
                 ))}
             </div>
-
             <div className="pt-3"></div>
             <ErrorBoundary>
                 <HistoryStatistics rows={paginatedRows} />
