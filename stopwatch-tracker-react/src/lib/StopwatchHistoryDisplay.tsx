@@ -14,8 +14,19 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
     const rows = rowIds.map(id => assumeDefined(store.getRow('stopwatchHistory', id)));
     const rowsMap = Object.fromEntries(rowIds.map(id => [id, assumeDefined(store.getRow('stopwatchHistory', id))]));
 
-    const startOfDay = (date: number) => new Date(date).setHours(0, 0, 0, 0);
-    const days = Array.from(new Set([...rows.map(row => startOfDay(row.endTime)), startOfDay(Date.now())])).sort((a, b) => b - a);
+    const startOfDay = (date: number) => new Date(date).setHours(0, 0, 0, 0); // day starts at midnight
+    function getUniqueDays(rows: HistoryRow[]){
+        const daySet = new Set<number>();
+        for (const row of rows) {
+            const day = startOfDay(assumeDefined(row.endTime));
+            daySet.add(day);
+        }
+        daySet.add(startOfDay(Date.now()));
+        // sort days in descending order, so most recent day is first
+        return Array.from(daySet).sort((a, b) => b - a);
+    };
+
+    const days = getUniqueDays(rows);
 
     const [currentPage, setCurrentPage] = useState(() => {
         const todayIndex = days.findIndex(day => day === startOfDay(Date.now()));
@@ -47,6 +58,7 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
             >
                 {'<'}
             </button>
+
             <p className="text-center text-base">
                 {currentPage !== -1 ? (
                     new Date().toDateString() === new Date(days[currentPage]).toDateString()
@@ -54,6 +66,7 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
                         : new Date(days[currentPage]).toLocaleDateString()
                 ) : "All time"}
             </p>
+
             <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages - 1}
