@@ -10,10 +10,11 @@ const {useCell, useRow } = UiReactWithSchemas;
 
 type HistoryRow = ReturnType<typeof useRow<'stopwatchHistory'>>
 
-export default function StopwatchHistoryStatistics(props: { stopwatchHistoryRowIds: string[] }) {
-    const rows = props.stopwatchHistoryRowIds.map((stopwatchHistoryRowId) => {
-        return assumeDefined(store.getRow('stopwatchHistory', stopwatchHistoryRowId))
-    })
+export default function StopwatchHistoryStatistics(props: { rows: HistoryRow[] }) {
+    // // const rows = props.stopwatchHistoryRowIds.map((stopwatchHistoryRowId) => {
+    // //     return assumeDefined(store.getRow('stopwatchHistory', stopwatchHistoryRowId))
+    // // })
+    const rows = props.rows
 
     const {groups, rowsByGroup} = rows.reduce((acc, row) => {
         const group = row.group

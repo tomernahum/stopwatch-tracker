@@ -4,36 +4,83 @@ import { assumeDefined, msToUnits, unitsToDisplayStrings } from './utils';
 import { ColorGroup, GROUPS, GROUPS_TO_COLORS } from './colorStuff';
 import HistoryStatistics from './StopwatchHistoryStatistics';
 import ErrorBoundary from './ErrorBoundary';
-const {useSliceRowIds, useCell } = UiReactWithSchemas;
+const {useSliceRowIds, useCell, useRow } = UiReactWithSchemas;
+
+
+type HistoryRow =  ReturnType<typeof useRow<'stopwatchHistory'>>
 
 export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) {
-	const stopwatchHistoryRowIds = useSliceRowIds('byStopwatchId', props.stopwatchId).toReversed();
+    const rowIds = useSliceRowIds('byStopwatchId', props.stopwatchId).toReversed();
+	const rows = rowIds.map((stopwatchHistoryRowId) => {
+        return assumeDefined(store.getRow('stopwatchHistory', stopwatchHistoryRowId))
+    })
+	const rowsMap = rowIds.reduce((acc, rowId) => {
+		acc[rowId] = assumeDefined(store.getRow('stopwatchHistory', rowId))
+		return acc
+	}, {} as {[rowId: string]: HistoryRow})
 
-    // const stopwatchHistoryRowIds = useRowIds('stopwatchHistory') //TODO wrong
+    const startOfDay = (date: number) => new Date(date).setHours(0, 0, 0, 0);
+    const days = Array.from(new Set(rows.map((row) => startOfDay(row.endTime)))).sort((a, b) => b - a);
 
+    const [currentPage, setCurrentPage] = useState(0);
 
-	return (
-		<div className="relative">
-			<p className="text-center text-base">Previous Times:</p>
-			<div className="pt-1.5"></div>
+    const paginatedRowIds = currentPage == -1 ? rowIds : days[currentPage]
+        ? rowIds
+            .filter((rowId) => startOfDay(rowsMap[rowId]?.endTime!) === days[currentPage]) // might be bad / break
+        : [];
 
+	const paginatedRows = paginatedRowIds.map((rowId) => rowsMap[rowId]);
 
-			<div className="flex flex-col gap-1.5 ">
-                {/* max-h-52 overflow-y-auto  */}
-				{stopwatchHistoryRowIds.map((stopwatchHistoryRowId) => (
-					<StopwatchHistoryEntry
-						key={stopwatchHistoryRowId}
-						stopwatchHistoryRowId={stopwatchHistoryRowId}
-					/>
-				))}
-			</div>
+    const totalPages = days.length;
 
-			<div className="pt-3"></div>
+    const showPagination = totalPages > 1;
+
+    return (
+        <div className="relative">
+            {showPagination ? (
+                <div className="flex items-center justify-between">
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, -1))}
+                        disabled={currentPage === -1}
+                        className="text-sm px-2 py-1 bg-[#7a7276]  rounded disabled:opacity-50"
+                    >
+                        {'<'}
+                    </button>
+                    <p className="text-center text-base">
+						{currentPage !== -1 ? (
+							new Date().toDateString() === new Date(days[currentPage]).toDateString() ? 'Today' : new Date(days[currentPage]).toLocaleDateString()
+						) : "All time"}
+					</p>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                        disabled={currentPage === totalPages - 1}
+                        className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
+                    >
+                        {">"}
+                    </button>
+                </div>
+			): (
+				<p className="text-center text-base">Previous Times:</p>
+			)}
+
+            <div className="pt-1.5"></div>
+
+            <div className="flex flex-col gap-1.5">
+                {paginatedRowIds.map((stopwatchHistoryRowId) => (
+					
+                    <StopwatchHistoryEntry
+                        key={stopwatchHistoryRowId}
+                        stopwatchHistoryRowId={stopwatchHistoryRowId}
+                    />
+                ))}
+            </div>
+
+            <div className="pt-3"></div>
             <ErrorBoundary>
-			    <HistoryStatistics stopwatchHistoryRowIds={stopwatchHistoryRowIds} />
+                <HistoryStatistics rows={paginatedRows} />
             </ErrorBoundary>
-		</div>
-	);
+        </div>
+    );
 }
 
 /* 
