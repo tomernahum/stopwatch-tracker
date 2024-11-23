@@ -17,7 +17,8 @@ export default function App() {
 
         <MainScreen />
 
-        <Inspector open={true} />
+        {import.meta.env.DEV ? <Inspector open={true} />: <Inspector open={false} />} 
+        {/* why not give the users a little inspector */}
       </Provider>
 
     </>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { store, UiReactWithSchemas } from "./tinybase-store";
+import { indexes, store, UiReactWithSchemas } from "./tinybase-store";
 import { assumeDefined, msToUnits, unitsToDisplayStrings } from "./utils";
 import StopwatchHistoryDisplay from "./StopwatchHistoryDisplay";
 import ErrorBoundary from "./ErrorBoundary";
@@ -23,10 +23,18 @@ export function Stopwatch(props: { stopwatchId: string }) {
 
 
     function onDeleteButtonPressed() {
-        const confirmDelete = confirm(`Delete "${title}?"`);
+        const confirmDelete = confirm(`Delete "${title}"? This is permanent.`);
         if (!confirmDelete) return;
 
+        
         store.delRow("stopwatches", props.stopwatchId);
+
+        // delete all associated history
+        const relevantHistoryRowIds = indexes.getSliceRowIds("byStopwatchId", props.stopwatchId);
+        relevantHistoryRowIds.forEach(id => {
+            store.delRow("stopwatchHistory", id);
+        })
+        
     }
 
     
@@ -40,10 +48,7 @@ export function Stopwatch(props: { stopwatchId: string }) {
                 X
             </button>
 
-            <h1 className="text-xl decoration-1 font-semibold text-center">
-                <div> {title}</div>
-                {/* todo: make contenteditale */}
-            </h1>
+            <Title stopwatchId={props.stopwatchId} />
 
             
 
@@ -66,6 +71,19 @@ export function Stopwatch(props: { stopwatchId: string }) {
         </div>
     );
 }
+
+
+function Title(props: { stopwatchId: string }) {
+    let title = assumeDefined(useCell("stopwatches", props.stopwatchId, "title"))
+    return (
+        <h1 className="text-xl decoration-1 font-semibold text-center">
+            <div> {title}</div>
+            {/* todo: make contenteditale */}
+        </h1>
+    )
+}
+
+
 
 
 const REFRESH_RATE = 16; // milliseconds. //potential: can make this into a editable setting

@@ -29,7 +29,7 @@ export default function MainScreen() {
 
     return (
         <>
-        <div className="flex flex-wrap justify-center md:justify-start items-center gap-10 w-fit mx-auto">
+        <div className="flex flex-wrap justify-center lg:justify-start items-center gap-10 w-fit mx-auto p-3">
 
             {stopwatchRowIds.map((stopwatchId) => (
                 <div key={stopwatchId}>
