@@ -72,8 +72,8 @@ function createTinyBaseStore(
     },{}] as const
     
     // register listeners for debugging
-    store.addValuesListener(() => console.log('valuesJson', store.getValues()));
-    store.addTablesListener(() => console.log('tablesJson', store.getTables()));
+    // store.addValuesListener(() => console.log('valuesJson', store.getValues()));
+    // store.addTablesListener(() => console.log('tablesJson', store.getTables()));
     
 
     // const roomId = new URLSearchParams(window.location.search).get('roomId') || 'defaultRoom';

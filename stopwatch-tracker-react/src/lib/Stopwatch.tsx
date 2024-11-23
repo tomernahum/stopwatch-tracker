@@ -74,11 +74,38 @@ export function Stopwatch(props: { stopwatchId: string }) {
 
 
 function Title(props: { stopwatchId: string }) {
-    let title = assumeDefined(useCell("stopwatches", props.stopwatchId, "title"))
+
+
+    const [titleInput, setTitleInput] = useState(assumeDefined(store.getCell("stopwatches", props.stopwatchId, "title")));
+
+    function editTitle(text: string) {
+        setTitleInput(text);
+        store.setCell("stopwatches", props.stopwatchId, "title", text);
+        
+    }
+
+    store.addCellListener("stopwatches", props.stopwatchId, "title", () => {
+        const newTitle = assumeDefined(store.getCell("stopwatches", props.stopwatchId, "title"));
+        setTitleInput(newTitle);
+    })
+
     return (
         <h1 className="text-xl decoration-1 font-semibold text-center">
-            <div> {title}</div>
-            {/* todo: make contenteditale */}
+            <input
+                type="text"
+                value={titleInput}
+                onChange={(e) => {
+                    e.preventDefault();
+                    editTitle(e.target.value);
+                }}
+                style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'none',
+                    textAlign: 'center',
+                    width: '100%'
+                }}
+            />
         </h1>
     )
 }
