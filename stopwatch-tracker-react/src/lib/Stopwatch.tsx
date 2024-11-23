@@ -47,8 +47,9 @@ export function Stopwatch(props: { stopwatchId: string }) {
             >
                 X
             </button>
-
-            <Title stopwatchId={props.stopwatchId} />
+            <ErrorBoundary>
+                <Title stopwatchId={props.stopwatchId} />
+            </ErrorBoundary>
 
             
 
@@ -72,28 +73,18 @@ export function Stopwatch(props: { stopwatchId: string }) {
     );
 }
 
-
 function Title(props: { stopwatchId: string }) {
-
-
-    const [titleInput, setTitleInput] = useState(assumeDefined(store.getCell("stopwatches", props.stopwatchId, "title")));
+    const title = assumeDefined(store.getCell("stopwatches", props.stopwatchId, "title"));
 
     function editTitle(text: string) {
-        setTitleInput(text);
         store.setCell("stopwatches", props.stopwatchId, "title", text);
-        
     }
-
-    store.addCellListener("stopwatches", props.stopwatchId, "title", () => {
-        const newTitle = assumeDefined(store.getCell("stopwatches", props.stopwatchId, "title"));
-        setTitleInput(newTitle);
-    })
 
     return (
         <h1 className="text-xl decoration-1 font-semibold text-center">
             <input
                 type="text"
-                value={titleInput}
+                value={title}
                 onChange={(e) => {
                     e.preventDefault();
                     editTitle(e.target.value);
@@ -223,6 +214,19 @@ function StopwatchButtons(props: {
         // currentTime = Date.now();
     }
 
+    function start() {
+        const now = Date.now();
+
+        store.transaction(() => {
+            store.setCell('stopwatches', props.stopwatchId, 'startTime', now)
+
+            store.setCell("stopwatches", props.stopwatchId, "pausedTimeCount", 0);
+            store.setCell("stopwatches", props.stopwatchId, "paused", false)
+            store.setCell("stopwatches", props.stopwatchId, "lastPausedTime", -1);
+
+        })
+    }
+
     function reset() {
         const now = Date.now()
 
@@ -276,7 +280,7 @@ function StopwatchButtons(props: {
                     </button>
                 ):
                 (
-                    <button className={`${controlButtonCSS} bg-lime-700`} onClick={unpause}>
+                    <button className={`${controlButtonCSS} bg-lime-700`} onClick={start}>
                         Start
                     </button>
                 )

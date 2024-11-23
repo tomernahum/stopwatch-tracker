@@ -18,12 +18,13 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
     const rows = rowIds.map(id => assumeDefined(store.getRow('stopwatchHistory', id)));
     const rowsMap = Object.fromEntries(rowIds.map(id => [id, assumeDefined(store.getRow('stopwatchHistory', id))]));
 
+    function getRowTimeEst(row: HistoryRow) { return assumeDefined(row.endTime) - assumeDefined(row.elapsedTimeCount); } // not endTime in case they finished it just after the day ended, but not starttime in case they finished it many days later (accointing for paused time)
 
     function startOfLocalDay(date: number) { return new Date(date).setHours(DAY_START_HOURS, 0, 0, 0); } // Uses users local timezone
     function getUniqueDaysStarts(rows: HistoryRow[]) {
         const daySet = new Set<number>();
         for (const row of rows) {
-            const day = startOfLocalDay(assumeDefined(row.startTime));
+            const day = startOfLocalDay(getRowTimeEst(row));
             daySet.add(day);
         }
 
@@ -80,7 +81,7 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
     function getPaginatedRowIds() {
         if (currentPageIndex === -1) return rowIds;
         return rowIds.filter(id => {
-                const dayOfRow = startOfLocalDay(assumeDefined(rowsMap[id].startTime))
+                const dayOfRow = startOfLocalDay(getRowTimeEst(rowsMap[id]))
                 return dayOfRow === uniqueDaysInHistoryStarts[currentPageIndex]
         })
     }
