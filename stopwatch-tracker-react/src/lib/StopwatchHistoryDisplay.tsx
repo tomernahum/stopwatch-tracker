@@ -9,67 +9,109 @@ const {useSliceRowIds, useCell, useRow } = UiReactWithSchemas;
 
 type HistoryRow =  ReturnType<typeof useRow<'stopwatchHistory'>>
 
+
+
+const DAY_START_HOURS = 1 // todo maybe potential user configurable setting
+
 export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) {
     const rowIds = useSliceRowIds('byStopwatchId', props.stopwatchId).toReversed();
     const rows = rowIds.map(id => assumeDefined(store.getRow('stopwatchHistory', id)));
     const rowsMap = Object.fromEntries(rowIds.map(id => [id, assumeDefined(store.getRow('stopwatchHistory', id))]));
 
-    const startOfDay = (date: number) => new Date(date).setHours(0, 0, 0, 0); // day starts at midnight
-    function getUniqueDays(rows: HistoryRow[]){
+
+    function startOfLocalDay(date: number) { return new Date(date).setHours(DAY_START_HOURS, 0, 0, 0); } // Uses users local timezone
+    function getUniqueDaysStarts(rows: HistoryRow[]) {
         const daySet = new Set<number>();
         for (const row of rows) {
-            const day = startOfDay(assumeDefined(row.endTime));
+            const day = startOfLocalDay(assumeDefined(row.startTime));
             daySet.add(day);
         }
-        daySet.add(startOfDay(Date.now()));
+
+        daySet.add(startOfLocalDay(Date.now())); // include today even if it's not in the history    
+
         // sort days in descending order, so most recent day is first
         return Array.from(daySet).sort((a, b) => b - a);
-    };
+    }
 
-    const days = getUniqueDays(rows);
+    const uniqueDaysInHistoryStarts = getUniqueDaysStarts(rows);
+    const uniqueDaysInHistory = uniqueDaysInHistoryStarts.map(d => new Date(d).toDateString())
+    //
 
-    const [currentPage, setCurrentPage] = useState(() => {
-        const todayIndex = days.findIndex(day => day === startOfDay(Date.now()));
-        return todayIndex !== -1 ? todayIndex : 0;
-    });
+    const currentlyViewedDay: 'today' | 'all' | string = useCell('stopwatches', props.stopwatchId, 'currentlyViewedDay') || "today";
 
-    const getPaginatedRowIds = () => {
-        if (currentPage === -1) return rowIds;
-        return days[currentPage]
-            ? rowIds.filter(id => startOfDay(rowsMap[id]?.endTime!) === days[currentPage])
-            : [];
-    };
+    function getCurrentPageIndex() {
+        if (currentlyViewedDay === 'all') return -1;
+        if (currentlyViewedDay === 'today') return 0;
 
-    const paginatedRowIds = getPaginatedRowIds();
-    const paginatedRows = paginatedRowIds.map(id => rowsMap[id]);
+        const index = uniqueDaysInHistory.indexOf(currentlyViewedDay);
+        if (index !== -1) return index;
 
-    const totalPages = days.length;
+        // if here then saved day no longer exists
+        console.warn("couldn't find your previously viewed day in your stopwatch history, defaulting to a near day", {currentlyViewedDay, uniqueDaysInHistory})
+
+        const newDayToTry1 = new Date(uniqueDaysInHistoryStarts[currentPageIndex] + 24*60*60*1000).toDateString();
+        const index2 = uniqueDaysInHistory.indexOf(newDayToTry1);
+        if (index2 !== -1) return index;
+
+        const newDayToTry2 = new Date(uniqueDaysInHistoryStarts[currentPageIndex] + 24*60*60*1000).toDateString();
+        const index3 = uniqueDaysInHistory.indexOf(newDayToTry2);
+        if (index3 !== -1) return index;
+
+
+        console.warn("still couldn't find your previously viewed day in your stopwatch history, defaulting to today", {currentlyViewedDay, uniqueDaysInHistory})
+        return 0 
+        // timezone shenanigans have not been tested, but I think  above code should work        
+    }
+    const currentPageIndex = getCurrentPageIndex();
+
+    function setCurrentPageIndex(callbackFn: (previousIndex: number) => number) {
+        
+        const previousIndex = currentPageIndex;
+        const newIndex = callbackFn(previousIndex);
+        console.log("setCurrentPageIndex", {newIndex, uniqueDaysInHistoryStarts, uniqueDaysInHistory: uniqueDaysInHistoryStarts.map(d => new Date(d).toDateString())})
+
+        const valueToSet = (newIndex === -1) ? 'all' : (newIndex === 0) ? 'today' 
+            : uniqueDaysInHistory[newIndex]
+        
+        store.setCell('stopwatches', props.stopwatchId, 'currentlyViewedDay', valueToSet)
+    }
+    
+
+    function getPaginatedRowIds() {
+        if (currentPageIndex === -1) return rowIds;
+        return rowIds.filter(id => {
+                const dayOfRow = startOfLocalDay(assumeDefined(rowsMap[id].startTime))
+                return dayOfRow === uniqueDaysInHistoryStarts[currentPageIndex]
+        })
+    }
+
+    const totalPages = uniqueDaysInHistoryStarts.length;
     const showPagination = totalPages > 1;
 
-    const handlePrevPage = () => setCurrentPage(prev => Math.max(prev - 1, -1));
-    const handleNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1));
+    function handlePrevPage() { setCurrentPageIndex(prev => Math.max(prev - 1, -1)); }
+    function handleNextPage() { setCurrentPageIndex(prev => Math.min(prev + 1, totalPages - 1)); }
 
     const renderPaginationControls = () => (
         <div className="flex items-center justify-between">
             <button
                 onClick={handlePrevPage}
-                disabled={currentPage === -1}
+                disabled={currentPageIndex === -1}
                 className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
             >
                 {'<'}
             </button>
 
             <p className="text-center text-base">
-                {currentPage !== -1 ? (
-                    new Date().toDateString() === new Date(days[currentPage]).toDateString()
+                {currentPageIndex !== -1 ? (
+                    new Date().toDateString() === uniqueDaysInHistory[currentPageIndex]
                         ? 'Today'
-                        : new Date(days[currentPage]).toLocaleDateString()
+                        : new Date(uniqueDaysInHistoryStarts[currentPageIndex]).toLocaleDateString()
                 ) : "All time"}
             </p>
 
             <button
                 onClick={handleNextPage}
-                disabled={currentPage === totalPages - 1}
+                disabled={currentPageIndex === totalPages - 1}
                 className="text-sm px-2 py-1 bg-[#7a7276] rounded disabled:opacity-50"
             >
                 {'>'}
@@ -79,11 +121,30 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
 
     return (
         <div className="relative">
-            {showPagination ? renderPaginationControls() : (
+            {showPagination ?
+                renderPaginationControls() 
+            : (
                 <p className="text-center text-base">Previous Times:</p>
             )}
             <div className="pt-1.5"></div>
-            <div className={`flex flex-col gap-1.5 ${currentPage === -1 ? 'overflow-y-auto max-h-72' : ''}`}>
+
+            <StopwatchHistoryDisplayPage
+                paginatedRowIds={getPaginatedRowIds()}
+                isAllTime={currentPageIndex === -1}
+            />
+        </div>
+    );
+}
+
+
+function StopwatchHistoryDisplayPage(props:{paginatedRowIds: string[], isAllTime: boolean}) {
+
+    const paginatedRowIds = props.paginatedRowIds;
+    const paginatedRows = paginatedRowIds.map(id => assumeDefined(store.getRow('stopwatchHistory', id)));
+
+    return (
+        <>
+            <div className={`flex flex-col gap-1.5 ${props.isAllTime ? 'overflow-y-auto max-h-72': ''}`}>
                 {paginatedRowIds.map(id => (
                     <StopwatchHistoryEntry
                         key={id}
@@ -95,9 +156,10 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
             <ErrorBoundary>
                 <HistoryStatistics rows={paginatedRows} />
             </ErrorBoundary>
-        </div>
-    );
+        </>
+    )
 }
+
 
 /* 
     TODO: if it's >2/day, do pagination per day. this should affect statistics as well 

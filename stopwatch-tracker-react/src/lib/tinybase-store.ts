@@ -17,6 +17,9 @@ function createTinyBaseStore(
             paused: {type: 'boolean'},
             lastPausedTime: {type: 'number', default: -1},
             pausedTimeCount: {type: 'number', default: 0},
+            
+            // could potentially move this to a seperate table / local device only. ux tradeoff on both sides.
+            currentlyViewedDay: {type: 'string', default: 'today'}, // "all" | "today" | output of new Date().toDateString() // note that in current implementation this day could cease to have any data for it if the user's time zone changes
         },
     
         stopwatchHistory: {
@@ -29,6 +32,11 @@ function createTinyBaseStore(
 
             group: {type: 'string', default: 'default'},
         }
+        /*
+            Potential todo: currently the day boundaries for pagination are based on local timezones which can change
+            we could write what day a history belongs to when we create it, along with the actual timestamp...
+            then we could save the currently viewed day as a .toDateString() output type string value
+        */
     
     } as const
     const valuesSchema = {} as const
