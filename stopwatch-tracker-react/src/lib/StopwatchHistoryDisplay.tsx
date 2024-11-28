@@ -11,7 +11,8 @@ type HistoryRow =  ReturnType<typeof useRow<'stopwatchHistory'>>
 
 
 
-const DAY_START_HOURS = 1 // todo maybe potential user configurable setting
+const DAY_START_OFFSET_HOURS = 4 // todo maybe potential user configurable setting
+const DAY_START_OFFSET_MINUTES = 30
 
 export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) {
     const rowIds = useSliceRowIds('byStopwatchId', props.stopwatchId).toReversed();
@@ -20,7 +21,12 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
 
     function getRowTimeEst(row: HistoryRow) { return assumeDefined(row.endTime) - assumeDefined(row.elapsedTimeCount); } // not endTime in case they finished it just after the day ended, but not starttime in case they finished it many days later (accointing for paused time)
 
-    function startOfLocalDay(date: number) { return new Date(date).setHours(DAY_START_HOURS, 0, 0, 0); } // Uses users local timezone
+    function startOfLocalDay(date: number) { 
+        const d = new Date(date);
+        d.setHours(d.getHours()- DAY_START_OFFSET_HOURS, d.getMinutes() - DAY_START_OFFSET_MINUTES); // subtract x hours from the date, so that 1 am 01/02 becomes a time on 01/01
+        const r = d.setHours(0, 0, 0, 0) // set to start of the day
+        return r;  // Uses users local timezone
+    }
     function getUniqueDaysStarts(rows: HistoryRow[]) {
         const daySet = new Set<number>();
         for (const row of rows) {
@@ -28,7 +34,10 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
             daySet.add(day);
         }
 
-        daySet.add(startOfLocalDay(Date.now())); // include today even if it's not in the history    
+        daySet.add(startOfLocalDay(Date.now())); // include today even if it's not in the history  
+        
+
+        // console.log("getUniqueDaysStarts", {daySet})
 
         // sort days in descending order, so most recent day is first
         return Array.from(daySet).sort((a, b) => b - a);
