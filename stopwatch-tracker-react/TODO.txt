@@ -1,0 +1,7 @@
+- Title, favicon, url, meta tags
+    - brief research what keywords to put
+        - brief research seo in general
+    - maybe about section that links
+- pwa
+- sharable rooms bugfix
+- re-ordering stopwatches
