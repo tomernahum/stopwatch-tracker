@@ -11,7 +11,19 @@
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="Stopwatches" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="manifest" href="/manifest-empty-start-url.json" />
+  <script>
+    // to allow adding specific pages to homescreen, in safari we need to set start url to "", but in chrome we need to not have start url at all. No solution that works for both afaik. got the idea to serve separate manifests from someone on stackoverflow. don't want to set up a backend to server the manifest If I can get away with not
+    // untested at time of writing since android emulator doesn't want to cooperate 
+    const manifestLink = document.getElementById("manifest-link");
+    if (navigator.userAgent.includes("Chrome")) {
+      manifestLink.remove();
+      const newManifestLink = document.createElement("link");
+      newManifestLink.rel = "manifest";
+      newManifestLink.href = "/manifest-no-start-url.json";
+      document.head.appendChild(newManifestLink);
+    }
+  </script>
 
   <script defer src="https://umami.ttools.io/script.js" data-website-id="fcfa00eb-269f-408e-9c83-5bb1c7c75c81"></script>
 

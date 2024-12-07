@@ -1,7 +1,7 @@
 {
   "name": "Multi Stopwatch Tracker",
   "short_name": "Stopwatches",
-  "start_url": "./",
+  "start_url": "",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
