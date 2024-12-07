@@ -44,6 +44,7 @@ export function Stopwatch(props: { stopwatchId: string }) {
             <button
                 className="bg-red-600 border-2  text-white   border-black dark:border-neutral-300 rounded-sm  hover:brightness-125 py-0 px-1 font-mono text-sm absolute right-2 top-2"
                 onClick={onDeleteButtonPressed}
+                data-umami-event="delete-stopwatch"
             >
                 X
             </button>
@@ -291,7 +292,7 @@ function StopwatchButtons(props: {
             )}
 
 
-            <button className={`${controlButtonCSS} bg-red-600`} onClick={reset}>
+            <button className={`${controlButtonCSS} bg-red-600`} onClick={reset} data-umami-event="Reset Stopwatch">
                 Reset
             </button>
         </div>

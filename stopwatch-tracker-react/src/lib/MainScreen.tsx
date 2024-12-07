@@ -44,6 +44,7 @@ export default function MainScreen() {
             <button
                 onClick={createStopwatch}
                 className="min-w-64 min-h-80 border-2 rounded-md"
+                data-umami-event="create-stopwatch"
             >
                 +
             </button>

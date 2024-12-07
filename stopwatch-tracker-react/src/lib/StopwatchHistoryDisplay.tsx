@@ -82,6 +82,12 @@ export default function StopwatchHistoryDisplay(props: { stopwatchId: string }) 
 
         const valueToSet = (newIndex === -1) ? 'all' : (newIndex === 0) ? 'today' 
             : uniqueDaysInHistory[newIndex]
+
+        if (valueToSet == "all") {
+            try {
+                umami.track('allHistorySelected');
+            } catch {}
+        }
         
         store.setCell('stopwatches', props.stopwatchId, 'currentlyViewedDay', valueToSet)
     }
