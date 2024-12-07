@@ -1,13 +1,61 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./index.css" />
+  <title>Vite + React + TS</title>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Info section (statically rendered/written for seo purposes) -->
+  <details class="absolute top-2 left-2" open>
+    <summary>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor"
+          d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8t-.288-.712T12 7t-.712.288T11 8t.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8" />
+      </svg>
+    </summary>
+    <div class="font-light text-sm max-w-[40rem] bg-neutral-400 dark:bg-[hsl(0,0%,12%)] mx-2 mt-0.5 p-2 rounded-md outline outline-1 ">
+      <p class="">
+        With this app you can create unlimited stopwatches that run at the same time. <br>  It is the ultimate multi stopwatch app.
+      </p>
+      <p class="mt-1">
+        Click the plus button to add an extra stopwatch. Click start, pause and reset to control the stopwatch.
+      </p>
+      <p class="mt-2 first-letter:text-lg first-letter:font-semibold">
+        Instead of the traditional laps system, these stopwatches record their previous times after you reset. You can
+        then see the sum and average time of your previous time recordings. 
+        You can also set a color from the square dropdown for each of your previous recordings, to track multiple things with one stopwatch, you can then see statistics for each color and all of them together.
+      </p>
+      <p class="mt-1">
+        In the middle of the history entry is the stopwatch's recorded time, and on the left is the time you <em>ended</em> the stopwatch. Time recordings from different days will be automatically separated, but you can view them all together by navigating to the "All Time" day.
+      </p>
+      <p class="mt-2  first-letter:text-lg first-letter:font-semibold">
+        Due to this system, you can use this app as a <strong class="font-extrabold">simple time tracker</strong>, with an alternative ui compared to other time trackers that maybe you will find to be more approachable or more flexible. Use it to track your work time, screen time, commute time, or anything else you want to track, all at once.
+      </p>
+      
+      <p class="mt-2 first-letter:text-lg first-letter:font-semibold">
+        Don't worry, all of your data is saved in your browser's local storage, and the timers will not be messed up if you reload the page or come back later.
+        
+      </p>
+      <p class="mt-1">
+        There is also a secret feature currently in beta, which you can discover by adding `?room=roomName` to the url.
+      </p>
+
+      <p class="mt-3">
+        You can find some more tools at 
+        <a href="https://www.ttools.io" target="_blank" class="underline text-blue-600">ttools.io</a>.
+        <br>Feel free to contact me if you have any questions, suggestions, feedback, or bugs to report.
+      </p>
+    </div>
+  </details>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

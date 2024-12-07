@@ -10,6 +10,15 @@
   
 }
 
+
+ details > summary {
+   list-style: none;
+ }
+ details > summary::-webkit-details-marker {
+   display: none;
+ }
+
+
 /* TODO: make more elegant solution / test on real mobile */
 
 @media (max-width: 480px) {

@@ -2,6 +2,7 @@
     - brief research what keywords to put
         - brief research seo in general
     - maybe about section that links
+    - about section in html that is hidden until button press
 - pwa
 - sharable rooms bugfix
 - re-ordering stopwatches
